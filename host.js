@@ -1,5 +1,5 @@
 const Mongoosedb = require("./mongo_client");
-const requests = require("./request_schema");
+const logs = require("./log_schema")
 
 const express = require("express");
 const app = express();
@@ -13,18 +13,21 @@ app.post("/capture", async (req, res) => {
    * 
    *  {
    *    timestamp: '2024-09-06T12:26:08.358Z',
+   *    code: 200,
+   *    message: 'OK'
    *    method: 'POST',
    *    url: '/create',
    *    headers: {
    *      Host: 'localhost:8080',
    *      'Content-Type': 'application/json',
-   *      'Content-Length': '57'
+   *      'Content-Length': '57',
    *      Accept: '',
    *      'User-Agent': 'PostmanRuntime/7.41.2',
    *      'Cache-Control': 'no-cache',
    *      'Postman-Token': '2c47212a-fd25-4fbe-a2fe-656d8c66e57e',
    *      'Accept-Encoding': 'gzip, deflate, br',
    *      Connection: 'keep-alive',
+   *      ... a lot of headers covered now
    *      },
    *    payload: { username: 'username', bio: 'bio' },
    *    from: '111.222.333.444',
@@ -33,7 +36,7 @@ app.post("/capture", async (req, res) => {
    * 
    */
   try {
-    await requests.create(req.body);
+    await logs.create(req.body)
   } catch (err) {
     /// this try/catch is used just to avoid server crashing.
     /// TODO: since the host only for logging we might go with diff
