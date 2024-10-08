@@ -1,5 +1,9 @@
 const Mongoosedb = require("./mongo_client");
-const Logs = require("./log_schema")
+const Logs = require("./log_schema");
+
+const process = require("process");
+const cluster = require("cluster");
+const cpus = require("os").cpus().length;
 
 const express = require("express");
 const app = express();
@@ -7,10 +11,9 @@ const app = express();
 app.use(express.json());
 
 app.post("/capture", async (req, res) => {
-
   /**
    *  incoming request
-   * 
+   *
    *  {
    *    timestamp: '2024-09-06T12:26:08.358Z',
    *    code: 200,
@@ -33,10 +36,10 @@ app.post("/capture", async (req, res) => {
    *    from: '111.222.333.444',
    *    to: 'logmink.dns'
    *  }
-   * 
+   *
    */
   try {
-    await Logs.create(req.body)
+    await Logs.create(req.body);
   } catch (err) {
     /// this try/catch is used just to avoid server crashing.
     /// TODO: since the host only for logging we might go with diff
@@ -54,9 +57,25 @@ app.post("/capture", async (req, res) => {
 
 Mongoosedb.connect().then(
   async () => {
-    app.listen(process.env.PORT || 32001, async () => {
-      console.log(`Server running on ${process.env.PORT || 32001}`);
-    });
+    if (cluster.isMaster) {
+      for (let i = 0; i < cpus; i++) {
+        cluster.fork();
+      }
+      cluster.on("exit", (worker, code, signal) => {
+        if (signal) {
+          console.log(`worker ${worker.process.pid} was killed by signal: ${signal}`);
+        } else if (code !== 0) {
+          console.log(`worker ${worker.process.pid} exited with error code: ${code}`);
+        } else {
+          console.log(`worker ${worker.process.pid} just died.`);
+        }
+        cluster.fork();
+      });
+    } else {
+      app.listen(process.env.PORT, async () => {
+        console.log(`Node process #${process.pid} running on port ${process.env.PORT || 32001}`);
+      });
+    }
   },
   (err) => {
     console.log("Unable to connect mongoose " + err);
