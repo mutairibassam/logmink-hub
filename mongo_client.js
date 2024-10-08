@@ -16,12 +16,12 @@ class Mongoosedb {
 
 Mongoosedb.client = null;
 Mongoosedb.db = null;
-// Mongoosedb.url = 'mongodb://localhost:27017/logdb-dev';
-// Mongoosedb.options = {
-//     // poolSize:   10,
-//     // reconnectTries:     5000,
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-// };
+Mongoosedb.url = 'mongodb://localhost:27017/logdb-prod';
+Mongoosedb.options = {
+    // poolSize:   10,
+    // reconnectTries:     5000,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+};
 
 module.exports = Mongoosedb;

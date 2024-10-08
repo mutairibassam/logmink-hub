@@ -1,14 +1,13 @@
 {
-  "name": "http-host",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "http-hub",
+  "version": "0.1.0",
+  "description": "Centeralized logs hub",
+  "main": "hub.js",
   "scripts": {
-    "dev": "node host.js"
+    "start": "node hub.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["logs", "logging", "hub"],
+  "author": "Bassam Almutairi (mutairibassam@gmail.com)",
   "dependencies": {
     "express": "^4.19.2",
     "mongoose": "^8.6.1"

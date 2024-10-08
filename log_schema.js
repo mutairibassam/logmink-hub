@@ -1,8 +1,18 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-function mask(payload, sensitiveKeys = ['password', 'pass', 'token', 'ssn', 'secret', 'authorization']) {    
-  if (typeof payload !== 'object' || payload === null) {
+function mask(
+  payload,
+  sensitiveKeys = [
+    "password",
+    "pass",
+    "token",
+    "ssn",
+    "secret",
+    "authorization",
+  ]
+) {
+  if (typeof payload !== "object" || payload === null) {
     return payload;
   }
 
@@ -10,10 +20,10 @@ function mask(payload, sensitiveKeys = ['password', 'pass', 'token', 'ssn', 'sec
 
   for (const key in payload) {
     if (payload.hasOwnProperty(key)) {
-      if (typeof payload[key] === 'object') {
+      if (typeof payload[key] === "object") {
         sanitizedPayload[key] = mask(payload[key], sensitiveKeys);
       } else if (sensitiveKeys.includes(key.toLowerCase())) {
-        sanitizedPayload[key] = '***************';
+        sanitizedPayload[key] = "***************";
       } else {
         sanitizedPayload[key] = payload[key];
       }
@@ -98,16 +108,16 @@ const logsSchema = new Schema({
 });
 
 // used to hide secret keys
-RequestSchema.pre("save", function(next) {  
+logsSchema.pre("save", function (next) {
   this.payload = mask(this.payload);
   next();
 });
 
 /// used to hide secret keys
-HeaderSchema.pre("save", function(next) {
-this.Authorization = '***************';
-next();
+HeaderSchema.pre("save", function (next) {
+  this.Authorization = "***************";
+  next();
 });
 
-const logs = model("log", logsSchema);
-module.exports = logs;
+const Logs = model("log", logsSchema);
+module.exports = Logs;

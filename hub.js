@@ -1,5 +1,5 @@
 const Mongoosedb = require("./mongo_client");
-const logs = require("./log_schema")
+const Logs = require("./log_schema")
 
 const express = require("express");
 const app = express();
@@ -36,7 +36,7 @@ app.post("/capture", async (req, res) => {
    * 
    */
   try {
-    await logs.create(req.body)
+    await Logs.create(req.body)
   } catch (err) {
     /// this try/catch is used just to avoid server crashing.
     /// TODO: since the host only for logging we might go with diff

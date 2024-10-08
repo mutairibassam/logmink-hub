@@ -43,7 +43,7 @@ services:
             - .:/usr/src/app
         environment:
             PORT: 32000 
-            mongoUrl: mongodb://mongo.logmink.hub:27017/logdb-dev
+            mongoUrl: mongodb://mongo.logmink.hub:27017/logdb-prod
         depends_on:
             - mongo.logmink.hub
             - express.logmink.hub
